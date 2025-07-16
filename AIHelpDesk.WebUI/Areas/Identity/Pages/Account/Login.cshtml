@@ -1,0 +1,90 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Accedi";
+}
+
+<div class="aih-login-wrapper">
+    <div class="aih-login-card mud-elevation-3">
+
+        <h2>@ViewData["Title"]</h2>
+        <div class="aih-login-subtitle">Usa il tuo account per accedere ad AI HelpDesk.</div>
+
+        <form id="account" method="post">
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email"
+                       class="form-control"
+                       autocomplete="username"
+                       aria-required="true"
+                       placeholder="name@example.com" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label"></label>
+                <input asp-for="Input.Password"
+                       class="form-control"
+                       autocomplete="current-password"
+                       aria-required="true"
+                       placeholder="Password" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <!-- Remember -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" asp-for="Input.RememberMe" />
+                <label asp-for="Input.RememberMe" class="form-check-label">
+                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                </label>
+            </div>
+
+            <!-- Submit -->
+            <div class="mb-2">
+                <button id="login-submit" type="submit" class="aih-login-btn">Accedi</button>
+            </div>
+
+            <!-- Links -->
+            <div class="aih-login-links">
+                <p><a id="forgot-password" asp-page="./ForgotPassword">Password dimenticata?</a></p>
+                <p><a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Nuovo utente? Registrati</a></p>
+                <p><a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Rispedisci email di conferma</a></p>
+            </div>
+        </form>
+
+        @* External providers *@
+        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+        {
+            <div class="mt-4">
+                <div class="aih-extprov-title">Oppure accedi con</div>
+                <hr />
+                <form id="external-account"
+                      asp-page="./ExternalLogin"
+                      asp-route-returnUrl="@Model.ReturnUrl"
+                      method="post">
+                    <div class="text-center">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit"
+                                    class="btn btn-outline-primary aih-extprov-btn"
+                                    name="provider"
+                                    value="@provider.Name"
+                                    title="Accedi con @provider.DisplayName">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

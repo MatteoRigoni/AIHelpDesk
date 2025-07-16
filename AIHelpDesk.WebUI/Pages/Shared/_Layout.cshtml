@@ -1,0 +1,36 @@
+@{
+    Layout = null;
+    var appTitle = "AI HelpDesk"; // TODO: tenant name
+}
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - @appTitle</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="~/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/app.css" />
+    <link rel="stylesheet" href="~/_content/MudBlazor/MudBlazor.min.css" />
+    <link rel="stylesheet" href="~/css/identity.css" asp-append-version="true" />
+</head>
+<body class="aih-auth-body">
+
+    <!-- Topbar brand -->
+    <header class="aih-auth-appbar">
+        <div class="aih-auth-appbar-content">
+            <span class="aih-auth-appbar-title">@appTitle</span>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="aih-auth-main">
+        @RenderBody()
+    </main>
+
+    <script src="~/_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="~/_framework/blazor.web.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

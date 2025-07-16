@@ -1,0 +1,7 @@
+﻿@page "/agent"
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "HelpDeskAgent")]
+
+<h3>HelpDesk Agent</h3>
+<p>Benvenuto agente</p>

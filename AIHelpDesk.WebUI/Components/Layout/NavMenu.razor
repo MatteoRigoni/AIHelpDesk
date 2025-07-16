@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
+
+<MudNavMenu>
+
+    <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+
+    <AuthorizeView>
+        <Authorized Context="context">
+            @if (context.User.IsInRole("Admin"))
+            {
+                <MudNavLink Href="/admin" Icon="@Icons.Material.Filled.AdminPanelSettings">Admin</MudNavLink>
+            }
+            else if (context.User.IsInRole("HelpDeskAgent"))
+            {
+                <MudNavLink Href="/agent" Icon="@Icons.Material.Filled.SupportAgent">Agent</MudNavLink>
+            }
+        </Authorized>
+    </AuthorizeView>
+
+</MudNavMenu>
