@@ -1,42 +1,30 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
-namespace AIHelpDesk.WebUI.Areas.Identity.Pages.Account
+public class LogoutModel : PageModel
 {
-    public class LogoutModel : PageModel
+    private readonly SignInManager<IdentityUser> _signInManager;
+
+    public LogoutModel(SignInManager<IdentityUser> signInManager)
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly ILogger<LogoutModel> _logger;
+        _signInManager = signInManager;
+    }
 
-        public LogoutModel(SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger)
-        {
-            _signInManager = signInManager;
-            _logger = logger;
-        }
+    // GET: /Identity/Account/Logout?returnUrl=/   ← logout immediato
+    public async Task<IActionResult> OnGet(string? returnUrl = null)
+    {
+        await _signInManager.SignOutAsync();
+        returnUrl ??= Url.Content("~/");
+        return LocalRedirect(returnUrl);
+    }
 
-        public async Task<IActionResult> OnPost(string returnUrl = null)
-        {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-            if (returnUrl != null)
-            {
-                return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                // This needs to be a redirect so that the browser performs a new
-                // request and the identity for the user gets updated.
-                return RedirectToPage();
-            }
-        }
+    // POST (lasciato per compatibilità)
+    public async Task<IActionResult> OnPost(string? returnUrl = null)
+    {
+        await _signInManager.SignOutAsync();
+        returnUrl ??= Url.Content("~/");
+        return LocalRedirect(returnUrl);
     }
 }

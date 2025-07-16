@@ -1,29 +1,48 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
-    {
-        Layout = parentLayout.ToString();
-    }
-    else
-    {
-        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
-    }
+    Layout = null;
+    var appTitle = "AI HelpDesk"; // TODO: tenant name
+    var pageTitle = ViewData["Title"] as string ?? "Gestione account";
 }
 
-<h1>Manage your account</h1>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8" />
+    <title>@pageTitle - @appTitle</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="~/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/app.css" />
+    <link rel="stylesheet" href="~/_content/MudBlazor/MudBlazor.min.css" />
+    <link rel="stylesheet" href="~/css/identity.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/identity.manage.css" asp-append-version="true" />
+</head>
+<body class="aih-auth-body aih-manage-body">
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
-        </div>
-    </div>
-</div>
+    <!-- Header top -->
+    <header class="aih-manage-appbar">
+        <a class="aih-manage-homebtn" href="~/" aria-label="Torna alla Home">
+            <svg class="aih-manage-homebtn-icn" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M19 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H19v-2z" />
+            </svg>
+            <span class="sr-only">Home</span>
+        </a>
+        <span class="aih-manage-appbar-title">@appTitle</span>
+    </header>
 
-@section Scripts {
+    <!-- Main -->
+    <main class="aih-manage-main container">
+        <div class="row">
+            <aside class="col-12 col-md-4 col-lg-3 aih-manage-navcol">
+                <partial name="_ManageNav" />
+            </aside>
+            <section class="col-12 col-md-8 col-lg-9 aih-manage-content">
+                @RenderBody()
+            </section>
+        </div>
+    </main>
+
+    <script src="~/_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="~/_framework/blazor.web.js"></script>
     @RenderSection("Scripts", required: false)
-}
+</body>
+</html>

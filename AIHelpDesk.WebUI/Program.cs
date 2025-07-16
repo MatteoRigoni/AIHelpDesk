@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using AIHelpDesk.WebUI.Data;
 using MudBlazor.Services;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");;
@@ -52,5 +53,22 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+// Endpoint for user logout
+app.MapPost("/auth/logout", async (
+    SignInManager<IdentityUser> signInManager,
+    HttpContext httpContext,
+    [FromQuery] string? returnUrl) =>
+{
+    await signInManager.SignOutAsync();
+
+    if (!string.IsNullOrEmpty(returnUrl) && Uri.IsWellFormedUriString(returnUrl, UriKind.Relative))
+    {
+        return Results.Ok(new { redirect = returnUrl });
+    }
+
+    return Results.Ok(new { redirect = "/" });
+})
+.RequireAuthorization();
 
 app.Run();

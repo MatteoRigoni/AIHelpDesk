@@ -1,15 +1,14 @@
-@inject SignInManager<IdentityUser> SignInManager
+@inject Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper<dynamic> HtmlHelper
 @{
-    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    // Percorso corrente (es. /Identity/Account/Manage/Email)
+    var path = Context.Request.Path.Value?.ToLowerInvariant() ?? "";
+    bool IsActive(string segment) => path.Contains($"/manage/{segment}".ToLowerInvariant());
+    string A(string seg) => IsActive(seg) ? "active" : "";
 }
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
-    @if (hasExternalLogins)
-    {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
-    }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-</ul>
+
+<nav class="nav flex-column manage-nav">
+    <a class="nav-link @A("index")" asp-page="./Index">Profilo</a>
+    <a class="nav-link @A("email")" asp-page="./Email">Email</a>
+    <a class="nav-link @A("changepassword")" asp-page="./ChangePassword">Password</a>
+    <a class="nav-link @A("personaldata")" asp-page="./PersonalData">Dati personali</a>
+</nav>

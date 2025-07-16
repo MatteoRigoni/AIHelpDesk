@@ -1,5 +1,31 @@
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿:root {
+    --nav-primary: #6750A4; /* cambia con il tuo brand */
+    --nav-text-light: var(--nav-primary);
+    --nav-text-dark: #D0BCFF;
+    --nav-hover: color-mix(in srgb, var(--nav-primary) 12%, transparent);
+    --nav-active: color-mix(in srgb, var(--nav-primary) 24%, transparent);
+}
+
+.mud-theme-dark {
+    --nav-hover: color-mix(in srgb, var(--nav-primary) 24%, transparent);
+    --nav-active: color-mix(in srgb, var(--nav-primary) 32%, transparent);
+}
+
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+    :root {
+        --nav-hover: #e0d7ff;
+        --nav-active: #c7b8ff;
+    }
+
+    .mud-theme-dark {
+        --nav-hover: #44376966;
+        --nav-active: #44376999;
+    }
+}
+
+
+body, input, button {
+    font-family: var(--mud-typography-default-family, Roboto, "Helvetica Neue", Arial, sans-serif);
 }
 
 a, .btn-link {
@@ -81,4 +107,86 @@ h1:focus {
     padding: 0.75rem 0 0.75rem 1.75rem; /* top/bottom + indent sinistra */
     list-style-type: disc;
     line-height: 1.4;
+}
+
+/* Evita la sottolineatura dei link MudNavLink in ogni stato */
+.mud-nav-link,
+.mud-nav-link:visited,
+.mud-nav-link:hover,
+.mud-nav-link:active,
+.mud-nav-link:focus {
+    text-decoration: none !important;
+}
+
+/* Impedisci il ritorno a capo del testo dei link di navigazione */
+.mud-nav-link .mud-nav-link-text {
+    white-space: nowrap;
+    overflow: hidden; /* opzionale: evita che esca fuori */
+    text-overflow: ellipsis; /* opzionale: mostra "..." se troppo lungo */
+}
+
+/* ───────── MAIN NAV RESET + ACTIVE STATE DISTINCT ───────── */
+
+/* Rimuovi bg default da *tutti* gli item menu non attivi */
+.main-nav .mud-list-item,
+.main-nav .mud-nav-link {
+    background-color: transparent !important;
+}
+
+    /* Mud aggiunge .mud-selected su item attivo; non vogliamo il grigio */
+    .main-nav .mud-list-item.mud-selected:not(.mud-nav-link-active),
+    .main-nav .mud-nav-link.mud-selected:not(.mud-nav-link-active) {
+        background-color: transparent !important;
+    }
+
+    /* Hover visibile solo se non attivo */
+    .main-nav .mud-list-item:not(.mud-nav-link-active):hover,
+    .main-nav .mud-nav-link:not(.mud-nav-link-active):hover {
+        background-color: var(--nav-hover) !important;
+        color: var(--nav-text-light) !important;
+    }
+
+    /* Stato attivo (classe applicata dal NavLink) */
+    .main-nav .mud-nav-link-active,
+    .main-nav .mud-list-item.mud-nav-link-active {
+        background-color: var(--nav-active) !important;
+        color: var(--nav-text-light) !important;
+        font-weight: 600;
+        position: relative;
+    }
+
+        /* Indicatore verticale */
+        .main-nav .mud-nav-link-active::before,
+        .main-nav .mud-list-item.mud-nav-link-active::before {
+            content: "";
+            position: absolute;
+            left: 4px;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 3px;
+            background-color: var(--nav-primary);
+        }
+
+    /* Nessuna sottolineatura e testo in una riga */
+    .main-nav .mud-nav-link,
+    .main-nav .mud-nav-link:visited,
+    .main-nav .mud-nav-link:hover,
+    .main-nav .mud-nav-link:active,
+    .main-nav .mud-nav-link:focus {
+        text-decoration: none !important;
+    }
+
+        .main-nav .mud-nav-link .mud-nav-link-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* Dark: testo più chiaro su hover/active */
+.mud-theme-dark .main-nav .mud-list-item:not(.mud-nav-link-active):hover,
+.mud-theme-dark .main-nav .mud-nav-link:not(.mud-nav-link-active):hover,
+.mud-theme-dark .main-nav .mud-nav-link-active,
+.mud-theme-dark .main-nav .mud-list-item.mud-nav-link-active {
+    color: var(--nav-text-dark) !important;
 }

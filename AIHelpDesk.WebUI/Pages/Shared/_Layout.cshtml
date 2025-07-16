@@ -1,6 +1,14 @@
+@using System.Linq
 @{
     Layout = null;
     var appTitle = "AI HelpDesk"; // TODO: tenant name
+
+    // returnUrl da querystring (supporta returnUrl o ReturnUrl)
+    var qs = Context?.Request?.Query;
+    string? ru = null;
+    if (qs?.ContainsKey("returnUrl") == true) { ru = qs["returnUrl"].FirstOrDefault(); }
+    else if (qs?.ContainsKey("ReturnUrl") == true) { ru = qs["ReturnUrl"].FirstOrDefault(); }
+    var returnUrl = string.IsNullOrWhiteSpace(ru) ? Url.Content("~/") : ru;
 }
 
 <!DOCTYPE html>
@@ -13,11 +21,18 @@
     <link rel="stylesheet" href="~/app.css" />
     <link rel="stylesheet" href="~/_content/MudBlazor/MudBlazor.min.css" />
     <link rel="stylesheet" href="~/css/identity.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/identity.manage.css" asp-append-version="true" />
 </head>
 <body class="aih-auth-body">
 
-    <!-- Topbar brand -->
+    <!-- Topbar brand con pulsante indietro -->
     <header class="aih-auth-appbar">
+        <a class="aih-auth-homebtn" href="@returnUrl" aria-label="Torna indietro">
+            <svg class="aih-auth-homebtn-icn" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M19 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H19v-2z" />
+            </svg>
+            <span class="sr-only">Indietro</span>
+        </a>
         <div class="aih-auth-appbar-content">
             <span class="aih-auth-appbar-title">@appTitle</span>
         </div>
@@ -30,7 +45,6 @@
 
     <script src="~/_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="~/_framework/blazor.web.js"></script>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>

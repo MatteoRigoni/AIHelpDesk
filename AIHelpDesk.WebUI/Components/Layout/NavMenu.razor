@@ -1,19 +1,25 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager Navigation
 
-<MudNavMenu>
+<MudNavMenu Class="main-nav">
 
-    <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
+        Home
+    </MudNavLink>
 
     <AuthorizeView>
         <Authorized Context="context">
             @if (context.User.IsInRole("Admin"))
             {
-                <MudNavLink Href="/admin" Icon="@Icons.Material.Filled.AdminPanelSettings">Admin</MudNavLink>
+                <MudNavLink Href="/admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings">
+                    Admin
+                </MudNavLink>
             }
             else if (context.User.IsInRole("HelpDeskAgent"))
             {
-                <MudNavLink Href="/agent" Icon="@Icons.Material.Filled.SupportAgent">Agent</MudNavLink>
+                <MudNavLink Href="/agent" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.SupportAgent">
+                    Agent
+                </MudNavLink>
             }
         </Authorized>
     </AuthorizeView>

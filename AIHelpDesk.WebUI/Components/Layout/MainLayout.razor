@@ -40,6 +40,6 @@
 
 @code {
     void GoProfile() => Navigation.NavigateTo("Identity/Account/Manage", forceLoad: true);
-    void GoLogout() => Navigation.NavigateTo("Identity/Account/Logout", forceLoad: true);
     void GoLogin() => Navigation.NavigateTo("Identity/Account/Login", forceLoad: true);
+    void GoLogout() => Navigation.NavigateTo("Identity/Account/Logout?returnUrl=/", true);
 }
