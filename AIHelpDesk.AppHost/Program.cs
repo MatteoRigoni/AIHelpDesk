@@ -8,7 +8,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"];
 
 builder.AddProject<Projects.AIHelpDesk_WebUI>("webui")
-       .WithEnvironment("ASPNETCORE_ENVIRONMENT", builder.EnvironmentName);
+       .WithEnvironment("ASPNETCORE_ENVIRONMENT", builder.EnvironmentName)
+       .WithEnvironment("ConnectionStrings__ApplicationDbContextConnection",
+                       builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? string.Empty);
 
 builder.AddOpenTelemetry("telemetry")
        .WithTracing(options =>

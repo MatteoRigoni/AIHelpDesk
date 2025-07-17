@@ -1,4 +1,4 @@
-﻿/* accessibilità: testo solo per screen reader */
+/* accessibilità: testo solo per screen reader */
 .sr-only {
     position: absolute;
     width: 1px;
