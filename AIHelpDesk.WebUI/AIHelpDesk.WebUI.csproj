@@ -16,7 +16,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 	  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
-	  <PackageReference Include="MudBlazor" Version="8.9.0" />
+          <PackageReference Include="MudBlazor" Version="8.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.5" />
   </ItemGroup>
 
 
