@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Sqlite;
 using AIHelpDesk.WebUI.Data;
 using MudBlazor.Services;
 using Microsoft.AspNetCore.Mvc;
+using Aspire.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");;
@@ -21,6 +22,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+
+builder.AddServiceDefaults();
 
 var app = builder.Build();
 
