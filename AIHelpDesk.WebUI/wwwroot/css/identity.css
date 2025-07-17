@@ -111,7 +111,7 @@
 /* ==============================
    LOGIN CARD
    ============================== */
-.aih-login-card {
+.aih-auth-card {
     width: 100%;
     max-width: 420px;
     padding: 1.5rem 2rem;
@@ -121,32 +121,32 @@
     text-align: left;
 }
 
-    .aih-login-card h2 {
+    .aih-auth-card h2 {
         text-align: center;
         margin-bottom: .5rem;
         font-weight: 600;
     }
 
-.aih-login-subtitle {
+.aih-auth-subtitle {
     text-align: center;
     font-size: .9rem;
     opacity: .7;
     margin-bottom: 1.25rem;
 }
 
-.aih-login-card hr {
+.aih-auth-card hr {
     margin: 1rem auto 1.5rem;
     opacity: .15;
 }
 
 /* campi */
-.aih-login-card .form-label {
+.aih-auth-card .form-label {
     font-size: .85rem;
     opacity: .8;
     margin-bottom: .25rem;
 }
 
-.aih-login-card .form-control {
+.aih-auth-card .form-control {
     background: var(--mud-palette-surface, #fff);
     border: 1px solid var(--mud-palette-lines-default, rgba(0,0,0,.23));
     border-radius: 4px;
@@ -154,19 +154,19 @@
     transition: border-color .1s, box-shadow .1s;
 }
 
-    .aih-login-card .form-control:focus {
+    .aih-auth-card .form-control:focus {
         border-color: var(--brand-auth, #1b6ec2);
         box-shadow: 0 0 0 2px rgba(27,110,194,.25);
         outline: none;
     }
 
 /* remember me */
-.aih-login-card .form-check-input {
+.aih-auth-card .form-check-input {
     margin-right: .25rem;
 }
 
 /* primary action */
-.aih-login-btn {
+.aih-auth-btn {
     width: 100%;
     padding: .75rem 1rem;
     font-size: 1rem;
@@ -178,26 +178,26 @@
     transition: background .15s;
 }
 
-    .aih-login-btn:hover,
-    .aih-login-btn:focus {
+    .aih-auth-btn:hover,
+    .aih-auth-btn:focus {
         background-color: #115293; /* darken */
     }
 
 /* links sotto */
-.aih-login-links {
+.aih-auth-links {
     margin-top: 1.5rem;
     text-align: center;
     font-size: .85rem;
 }
 
-    .aih-login-links p {
+    .aih-auth-links p {
         margin: .25rem 0;
     }
 
-    .aih-login-links a {
+    .aih-auth-links a {
         text-decoration: none;
     }
 
-        .aih-login-links a:hover {
+        .aih-auth-links a:hover {
             text-decoration: underline;
         }
