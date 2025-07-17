@@ -1,11 +1,46 @@
 .page {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
 }
 
-main {
-    flex: 1;
+.layout-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.MudLayout.layout-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.MudMainContent {
+  flex: 1 0 auto;
+  /* rimuovi padding e margin eccessivi qui se necessario */
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.aih-home-footer {
+  flex-shrink: 0;
+}
+
+.aih-admin-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-height: 0;
+}
+
+.aih-admin-main {
+  flex: 1 0 auto;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .sidebar {
@@ -35,6 +70,17 @@ main {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+/* Quando il drawer è espanso (width: 240px), sposta il contenuto */
+.MudDrawer[style*="width: 240px"] ~ .MudMainContent {
+  margin-left: 240px !important;
+}
+
+@media (max-width: 640.98px) {
+  .MudMainContent {
+    margin-left: 0 !important;
+  }
+}
 
 @media (max-width: 640.98px) {
     .top-row {

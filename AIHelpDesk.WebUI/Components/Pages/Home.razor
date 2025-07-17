@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @inject NavigationManager Nav
@@ -7,88 +7,76 @@
 
 <div class="aih-home-root">
 
-    <MudContainer MaxWidth="MaxWidth.Large" Class="aih-home-main py-8">
-        <MudStack Spacing="3">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="aih-home-main py-10">
 
-            <!-- Hero -->
-            <MudPaper Elevation="2" Class="p-8 text-center">
-                <MudText Typo="Typo.h3" Class="mb-2 font-weight-600">@DisplayTitle</MudText>
-                <MudText Typo="Typo.subtitle1">
-                    Assistente AI interno per i team di supporto aziendale. Ogni istanza è self‑hosted, isolata e personalizzabile.
-                </MudText>
-            </MudPaper>
+        <!-- Hero più leggero -->
+        <MudPaper Elevation="0"
+                  Class="p-8 text-center hero-paper">
+            <MudText Typo="Typo.h2" Class="mb-1 font-weight-bold">@DisplayTitle</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary">
+                Assistente AI interno per i team di supporto aziendale. Ogni istanza è self‑hosted, isolata e personalizzabile.
+            </MudText>
+        </MudPaper>
 
-            <!-- Feature highlights -->
-            <MudGrid GutterSize="3">
-                <MudItem xs="12" sm="6" md="3">
-                    <MudCard Elevation="1" Class="h-100 text-center p-4">
-                        <MudCardContent>
-                            <MudIcon Icon="@Icons.Material.Filled.SmartToy" Size="Size.Large" />
-                            <MudText Typo="Typo.subtitle2" Class="mt-2">AI Conversazionale</MudText>
-                            <MudText Typo="Typo.body2">Supporto assistito da modelli linguistici avanzati.</MudText>
-                        </MudCardContent>
-                    </MudCard>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="3">
-                    <MudCard Elevation="1" Class="h-100 text-center p-4">
-                        <MudCardContent>
-                            <MudIcon Icon="@Icons.Material.Filled.Apartment" Size="Size.Large" />
-                            <MudText Typo="Typo.subtitle2" Class="mt-2">Istanza Dedicata</MudText>
-                            <MudText Typo="Typo.body2">Ogni azienda opera nel proprio ambiente isolato.</MudText>
-                        </MudCardContent>
-                    </MudCard>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="3">
-                    <MudCard Elevation="1" Class="h-100 text-center p-4">
-                        <MudCardContent>
-                            <MudIcon Icon="@Icons.Material.Filled.BuildCircle" Size="Size.Large" />
-                            <MudText Typo="Typo.subtitle2" Class="mt-2">Configurabile</MudText>
-                            <MudText Typo="Typo.body2">Branding, impostazioni AI, fonti dati e altro.</MudText>
-                        </MudCardContent>
-                    </MudCard>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="3">
-                    <MudCard Elevation="1" Class="h-100 text-center p-4">
-                        <MudCardContent>
-                            <MudIcon Icon="@Icons.Material.Filled.Storage" Size="Size.Large" />
-                            <MudText Typo="Typo.subtitle2" Class="mt-2">Storage Flessibile</MudText>
-                            <MudText Typo="Typo.body2">Supporto per database e archiviazioni differenti.</MudText>
-                        </MudCardContent>
-                    </MudCard>
-                </MudItem>
-            </MudGrid>
+        <!-- Feature highlights senza bordi netti -->
+        <MudGrid GutterSize="3" Class="mt-8">
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Elevation="0" Class="feature-card">
+                    <MudIcon Icon="@Icons.Material.Filled.SmartToy" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">AI Conversazionale</MudText>
+                    <MudText Typo="Typo.body2">Supporto assistito da modelli linguistici avanzati.</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Elevation="0" Class="feature-card">
+                    <MudIcon Icon="@Icons.Material.Filled.Apartment" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Istanza Dedicata</MudText>
+                    <MudText Typo="Typo.body2">Ogni azienda opera nel proprio ambiente isolato.</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Elevation="0" Class="feature-card">
+                    <MudIcon Icon="@Icons.Material.Filled.BuildCircle" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Configurabile</MudText>
+                    <MudText Typo="Typo.body2">Branding, impostazioni AI, fonti dati e altro.</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Elevation="0" Class="feature-card">
+                    <MudIcon Icon="@Icons.Material.Filled.Storage" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Storage Flessibile</MudText>
+                    <MudText Typo="Typo.body2">Supporto per database e archiviazioni differenti.</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
 
-            <MudDivider Class="my-4" />
+        <MudDivider Class="my-6" />
 
-            <!-- Guida rapida comune -->
-            <MudPaper Elevation="1" Class="p-6">
-                <MudText Typo="Typo.h6" Class="ml-2" GutterBottom="true"> Da dove iniziare</MudText>
-                <ul class="aih-home-bullets">
-                    <li>Usa il menu di navigazione a sinistra per accedere alle funzionalità disponibili.</li>
-                    <li>Apri la chat AI per porre domande tecniche o ricevere assistenza.</li>
-                    <li>Consulta lo storico delle interazioni per trovare risposte già date.</li>
-                    <li>Carica documenti e materiali aziendali (se hai i permessi) per arricchire il contesto AI.</li>
-                    <li>Gestisci utenti, ruoli e impostazioni dell’istanza (se autorizzato).</li>
-                </ul>
-            </MudPaper>
-
-            <!-- Stato istanza (dati dinamici quando disponibili) -->
-            <MudPaper Elevation="0" Class="px-2 pt-4 pb-2">
-                <MudText Typo="Typo.subtitle2" GutterBottom="true">Stato istanza</MudText>
-                <MudStack Spacing="1" Class="mud-typography-caption opacity-70">
-                    <span>Azienda: @DisplayCompany</span>
-                    <span>Utenti: @DisplayUsers</span>
-                    <span>Documenti indicizzati: @DisplayDocs</span>
-                    <span>Provider AI: @DisplayProvider</span>
-                </MudStack>
-            </MudPaper>
-
+        <!-- Guida rapida più semplice -->
+        <MudStack Spacing="1" Class="start-guide">
+            <MudText Typo="Typo.h6">Da dove iniziare</MudText>
+            <ol>
+                <li>Usa il menu di navigazione a sinistra per accedere alle funzionalità disponibili.</li>
+                <li>Apri la chat AI per porre domande tecniche o ricevere assistenza.</li>
+                <li>Consulta lo storico delle interazioni per trovare risposte già date.</li>
+                <li>Carica documenti e materiali aziendali (se hai i permessi) per arricchire il contesto AI.</li>
+                <li>Gestisci utenti, ruoli e impostazioni dell’istanza (se autorizzato).</li>
+            </ol>
         </MudStack>
+
+        <!-- Stato istanza inline, senza box -->
+        <MudStack Direction="Row" Spacing="6" Class="instance-status mt-8 mud-text-secondary">
+            <MudText Typo="Typo.caption">Azienda: @DisplayCompany</MudText>
+            <MudText Typo="Typo.caption">Utenti: @DisplayUsers</MudText>
+            <MudText Typo="Typo.caption">Documenti indicizzati: @DisplayDocs</MudText>
+            <MudText Typo="Typo.caption">Provider AI: @DisplayProvider</MudText>
+        </MudStack>
+
     </MudContainer>
 
-    <!-- Footer docked -->
-    <footer class="aih-home-footer">
-        <MudContainer MaxWidth="MaxWidth.Large" Class="text-center py-4 opacity-70">
+    <!-- Footer solo in Home -->
+    <footer class="aih-home-footer mt-4">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="text-center py-2 mud-text-secondary">
             AI HelpDesk – piattaforma self‑hosted
         </MudContainer>
     </footer>
@@ -96,7 +84,6 @@
 </div>
 
 @code {
-    // Parametri (in futuro: bind a TenantSettings)
     [Parameter] public string? TenantName { get; set; }
     [Parameter] public int? UserCount { get; set; }
     [Parameter] public int? DocumentCount { get; set; }

@@ -1,0 +1,63 @@
+﻿@page "/admin/upload"
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@attribute [Authorize(Roles = "Admin")]
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<div class="aih-admin-root">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="aih-admin-main py-10">
+
+        <!-- Hero amministrativo -->
+        <MudPaper Elevation="0" Class="p-8 text-center admin-hero-paper mb-6">
+            <MudText Typo="Typo.h2" Class="mb-1 font-weight-bold">Upload Documenti AI</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary">
+                Carica file per arricchire la base conoscitiva dell'assistente interno.
+            </MudText>
+        </MudPaper>
+
+        <!-- Form di upload styled -->
+        <MudPaper Elevation="0" Class="feature-card p-8 text-center">
+            <MudText Typo="Typo.caption" Class="mb-4 mud-text-secondary">
+                Formati supportati: PDF, TXT, CSV (max 5 MB)
+            </MudText>
+
+            <MudFileUpload 
+                T="IBrowserFile" 
+                Context="fileInput" 
+                Accept="application/pdf,text/plain,text/csv" 
+                MaxFileSize="5242880" 
+                FilesChanged="OnFileChanged">
+                <ActivatorContent>
+                    <MudButton Class="mt-4"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload">
+                        Seleziona documento
+                    </MudButton>
+                </ActivatorContent>
+            </MudFileUpload>
+        </MudPaper>
+
+        <!-- Feedback Snackbar positioned -->
+        <MudSnackbarContainer />
+
+    </MudContainer>
+</div>
+
+@code {
+    private IBrowserFile fileInput = default!;
+
+    private async Task OnFileChanged(IBrowserFile file)
+    {
+        using var content = new MultipartFormDataContent();
+        var stream = file.OpenReadStream(5 * 1024 * 1024);
+        content.Add(new StreamContent(stream), "file", file.Name);
+        var res = await Http.PostAsync("upload/ai-docs", content);
+
+        if (res.IsSuccessStatusCode)
+            Snackbar.Add($"File {file.Name} caricato con successo.", Severity.Success);
+        else
+            Snackbar.Add($"Errore nel caricamento di {file.Name}.", Severity.Error);
+    }
+}

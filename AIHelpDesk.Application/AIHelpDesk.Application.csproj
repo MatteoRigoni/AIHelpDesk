@@ -1,4 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="PdfPig" Version="0.1.10" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AIHelpDesk.Domain\AIHelpDesk.Domain.csproj" />

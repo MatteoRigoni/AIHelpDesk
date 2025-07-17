@@ -1,0 +1,13 @@
+BillingDate;Note: 02/01/2024;Rimozione risorse AnagraficaUnica | 
+BillingDate;Note: 03/01/2024;2gg in piu di fatturazione rispetto febbraio | 
+BillingDate;Note: 04/01/2024;Traffico maggiore del mese precedente | 
+BillingDate;Note: 06/01/2024;Abbiamo dovuto attivare per un paio di giorni il log del WAF per indagare un disservizio | 
+BillingDate;Note: 07/01/2024;Switch a nuove macchine portale | 
+BillingDate;Note: 08/01/2024;Traffico generale nettamente ridotto rispetto alla media | 
+BillingDate;Note: 09/01/2024;Nessuna variazione rilevante | 
+BillingDate;Note: 10/01/2024;Nuove licenze per Visual Studio | 
+BillingDate;Note: 11/01/2024;Revisione del piano di disaster recovery (costo spot) | 
+BillingDate;Note: 12/01/2024;In linea con altri mesi | 
+BillingDate;Note: 01/01/2025;Da questo mese +15% | 
+BillingDate;Note: 02/10/2025;OpenBanking partito in produzione | 
+BillingDate;Note: 03/10/2025;Sono stati condotti i test sul DR che incidono per 2700 euro | 
