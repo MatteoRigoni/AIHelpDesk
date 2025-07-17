@@ -1,7 +1,8 @@
-﻿@page "/agent"
-
+@page "/agent"
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> L
 @attribute [Authorize(Roles = "HelpDeskAgent")]
 
-<h3>HelpDesk Agent</h3>
-<p>Benvenuto agente</p>
+<h3>@L["AgentDashboard"]</h3>
+<p>@L["WelcomeAgent"]</p>

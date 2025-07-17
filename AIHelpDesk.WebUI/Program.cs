@@ -1,8 +1,11 @@
 using AIHelpDesk.WebUI.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Sqlite;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Localization;
+using System.Globalization;
 using AIHelpDesk.WebUI.Data;
+using System.Linq;
 using MudBlazor.Services;
 using Microsoft.AspNetCore.Mvc;
 using Aspire.Hosting;
@@ -16,6 +19,7 @@ builder.Services
     .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -46,6 +50,13 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+var supportedCultures = new[] { new CultureInfo("en"), new CultureInfo("it") };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture("it")
+    .AddSupportedCultures(supportedCultures.Select(c => c.Name).ToArray())
+    .AddSupportedUICultures(supportedCultures.Select(c => c.Name).ToArray());
+app.UseRequestLocalization(localizationOptions);
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -60,12 +71,13 @@ app.MapRazorComponents<App>()
 // Endpoint for user logout
 app.MapPost("/auth/logout", async (
     SignInManager<IdentityUser> signInManager,
-    HttpContext httpContext,
     [FromQuery] string? returnUrl) =>
 {
     await signInManager.SignOutAsync();
 
-    if (!string.IsNullOrEmpty(returnUrl) && Uri.IsWellFormedUriString(returnUrl, UriKind.Relative))
+    if (!string.IsNullOrEmpty(returnUrl) &&
+        Uri.TryCreate(returnUrl, UriKind.Relative, out var uri) &&
+        !returnUrl.StartsWith("//"))
     {
         return Results.Ok(new { redirect = returnUrl });
     }

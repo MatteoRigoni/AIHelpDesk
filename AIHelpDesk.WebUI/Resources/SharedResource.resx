@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AdminDashboard" xml:space="preserve">
+    <value>Admin Dashboard</value>
+  </data>
+  <data name="WelcomeAdmin" xml:space="preserve">
+    <value>Welcome administrator</value>
+  </data>
+  <data name="AgentDashboard" xml:space="preserve">
+    <value>HelpDesk Agent</value>
+  </data>
+  <data name="WelcomeAgent" xml:space="preserve">
+    <value>Welcome agent</value>
+  </data>
+</root>
+

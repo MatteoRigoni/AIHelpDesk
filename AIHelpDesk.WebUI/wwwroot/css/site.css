@@ -1,27 +1,3 @@
-﻿:root {
-    --nav-primary: #6750A4; /* cambia con il tuo brand */
-    --nav-text-light: var(--nav-primary);
-    --nav-text-dark: #D0BCFF;
-    --nav-hover: color-mix(in srgb, var(--nav-primary) 12%, transparent);
-    --nav-active: color-mix(in srgb, var(--nav-primary) 24%, transparent);
-}
-
-.mud-theme-dark {
-    --nav-hover: color-mix(in srgb, var(--nav-primary) 24%, transparent);
-    --nav-active: color-mix(in srgb, var(--nav-primary) 32%, transparent);
-}
-
-@supports not (background: color-mix(in srgb, red 50%, blue)) {
-    :root {
-        --nav-hover: #e0d7ff;
-        --nav-active: #c7b8ff;
-    }
-
-    .mud-theme-dark {
-        --nav-hover: #44376966;
-        --nav-active: #44376999;
-    }
-}
 
 
 body, input, button {
@@ -190,3 +166,4 @@ h1:focus {
 .mud-theme-dark .main-nav .mud-list-item.mud-nav-link-active {
     color: var(--nav-text-dark) !important;
 }
+

@@ -1,7 +1,8 @@
-﻿@page "/admin"
-
+@page "/admin"
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> L
 @attribute [Authorize(Roles = "Admin")]
 
-<h3>Admin Dashboard</h3>
-<p>Benvenuto amministratore</p>
+<h3>@L["AdminDashboard"]</h3>
+<p>@L["WelcomeAdmin"]</p>
