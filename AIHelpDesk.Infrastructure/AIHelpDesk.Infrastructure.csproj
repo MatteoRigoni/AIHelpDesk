@@ -1,6 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Qdrant.Client" Version="9.3.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="Qdrant.Client" Version="1.15.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AIHelpDesk.Application\AIHelpDesk.Application.csproj" />
     <ProjectReference Include="..\AIHelpDesk.Domain\AIHelpDesk.Domain.csproj" />
   </ItemGroup>

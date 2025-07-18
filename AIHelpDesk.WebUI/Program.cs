@@ -1,14 +1,19 @@
+using AIHelpDesk.Application.AI;
+using AIHelpDesk.Infrastructure;
+using AIHelpDesk.Infrastructure.Model;
 using AIHelpDesk.WebUI.Components;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Localization;
-using System.Globalization;
 using AIHelpDesk.WebUI.Data;
-using System.Linq;
-using MudBlazor.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel;
+using MudBlazor.Services;
+using System.Globalization;
+using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +42,7 @@ builder.Services.AddScoped(sp => {
     var cookies = httpCtx.Request.Headers["Cookie"].ToString();
     var handler = new HttpClientHandler
     {
-        UseCookies = false   // perché aggiungiamo manualmente l’header
+        UseCookies = false  
     };
     var client = new HttpClient(handler) { BaseAddress = new Uri(nav.BaseUri) };
     if (!string.IsNullOrEmpty(cookies))
@@ -48,6 +53,12 @@ builder.Services.AddScoped(sp => {
 builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IFileParserService, FileParserService>();
+builder.Services.AddSingleton<ITextChunkerService, TextChunkerService>();
+builder.Services.Configure<OpenAiSettings>(builder.Configuration.GetSection("OpenAI"));
+builder.Services.AddScoped<IEmbeddingService, OpenAiEmbeddingService>();
+
+builder.AddQdrantClient("qdrant");
+builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
 
 builder.AddServiceDefaults();
 

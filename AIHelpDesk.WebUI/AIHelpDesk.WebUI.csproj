@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AIHelpDesk.Application\AIHelpDesk.Application.csproj" />
+    <ProjectReference Include="..\AIHelpDesk.Infrastructure\AIHelpDesk.Infrastructure.csproj" />
     <ProjectReference Include="..\AIHelpDesk.ServiceDefaults\AIHelpDesk.ServiceDefaults.csproj" />
   </ItemGroup>
 
