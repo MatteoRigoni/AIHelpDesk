@@ -39,20 +39,20 @@ public sealed class QdrantVectorStoreService : IVectorStoreService
                     Size = (ulong)first.vector.Length,
                     Distance = Distance.Cosine
                 });
-
-            // 3️⃣  PointStruct<string> + payload dizionario
-            var points = items.Select(i =>
-            new PointStruct()
-            {
-                Id = new PointId { Num = Convert.ToUInt64(i.id) },
-                Vectors = i.vector,
-                Payload = {
-                ["text"] = i.text
-            }
-            });
-
-            await _client.UpsertAsync(name, points.ToList());
         }
+
+        // 3️⃣  PointStruct<string> + payload dizionario
+        var points = items.Select(i =>
+        new PointStruct()
+        {
+            Id = new PointId { Uuid = i.id },
+            Vectors = i.vector,
+            Payload = {
+                ["text"] = i.text
+        }
+        });
+
+        await _client.UpsertAsync(name, points.ToList());
     }
 
     // ------------------------------------------------------------
@@ -67,7 +67,7 @@ public sealed class QdrantVectorStoreService : IVectorStoreService
 
         var hits = await _client.SearchAsync(
             name, queryVector,
-            limit: (ulong) topK,
+            limit: (ulong)topK,
             payloadSelector: new WithPayloadSelector() { Enable = true });
 
         return hits.Select(h =>
