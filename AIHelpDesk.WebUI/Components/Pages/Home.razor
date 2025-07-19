@@ -97,7 +97,7 @@
 
     string DisplayTitle => Info.TenantName is null
                                ? "Benvenuto in AI HelpDesk"
-                               : $"Benvenuto in {Info.TenantName}";
+                               : $"Benvenuto, {Info.TenantName}";
     string DisplayCompany => Info.TenantName ?? "Non configurato";
     string DisplayUsers => userCount?.ToString() ?? "—";
     string DisplayDocs => docCount?.ToString() ?? "—";

@@ -13,6 +13,12 @@ namespace AIHelpDesk.Application.AI
         /// <summary>
         /// Riceve la domanda, esegue retrieval + GPT‑4 e restituisce la conversazione.
         /// </summary>
-        Task<IReadOnlyList<ChatMessage>> AskAsync(string tenantId, string userQuestion, string userId);
+        Task<IReadOnlyList<Application.AI.ChatMessage>> AskAsync(
+            string tenantId,
+            string userQuestion,
+            string userId,
+            double? temperature = 0,
+            double? topP = 1,
+            int? maxTokens = 1024);
     }
 }

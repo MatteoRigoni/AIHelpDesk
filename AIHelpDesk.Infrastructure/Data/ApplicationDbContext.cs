@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     }
 
     public DbSet<ChatLog> ChatLogs { get; set; }
+    public DbSet<PromptSettings> PromptSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -72,6 +72,7 @@ builder.Services.AddSingleton<ChatClient>(sp =>
 builder.Services.AddScoped<DocumentIndexService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IChatLogService, ChatLogService>();
+builder.Services.AddScoped<IPromptSettingsService, PromptSettingsService>();
 
 builder.Services.Configure<TenantInfoOptions>(
     builder.Configuration.GetSection("TenantInfo"));

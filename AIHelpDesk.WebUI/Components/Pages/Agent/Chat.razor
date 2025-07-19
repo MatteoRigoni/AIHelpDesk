@@ -72,13 +72,8 @@
     protected override async Task OnInitializedAsync()
     {
         var auth = await AuthState.GetAuthenticationStateAsync();
-        var user = auth.User;;
-
-        if (user.IsInRole("HelpDeskAgent"))
-        {
-            // solo il proprio storico
-            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        }
+        var user = auth.User;
+        userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
 
     private async Task SendAsync()

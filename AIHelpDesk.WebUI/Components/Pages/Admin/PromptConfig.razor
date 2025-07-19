@@ -1,0 +1,102 @@
+﻿@page "/admin/prompt"
+@using AIHelpDesk.Application.AI
+@using AIHelpDesk.Domain
+@using AIHelpDesk.Infrastructure.Model
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+@inject IPromptSettingsService PromptSvc
+@inject ISnackbar Snackbar
+@inject Microsoft.Extensions.Options.IOptions<TenantInfoOptions> TenantInfoOpt
+
+@rendermode InteractiveServer
+
+<PageTitle>AI HelpDesk – Configurazione Prompt</PageTitle>
+
+<div class="aih-admin-root">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="aih-admin-main py-10">
+
+        <!-- Hero -->
+        <MudPaper Elevation="0" Class="p-8 text-center admin-hero-paper mb-6">
+            <MudText Typo="Typo.h2" Class="mb-1 font-weight-bold">Configurazione Prompt AI</MudText>
+            <MudText Typo="Typo.body1" Class="mt-2 mud-text-secondary">
+                Personalizza il prompt di sistema e i parametri di generazione delle risposte.
+            </MudText>
+        </MudPaper>
+
+        <!-- Form -->
+        <MudPaper Elevation="1" Class="p-6 mx-auto" MaxWidth="700px">
+            <MudForm Class="p-2" @ref="_form" OnValidSubmit="SaveAsync" OnInvalidSubmit="HandleInvalid">
+
+                <MudTextField @bind-Value="_model.SystemPrompt"
+                              Label="Prompt di sistema"
+                              Lines="5"
+                              Required="true"
+                              FullWidth="true" />
+
+                <MudGrid Class="mt-4" GutterSize="3">
+                    <MudItem xs="12" sm="4">
+                        <MudNumericField @bind-Value="_model.Temperature"
+                                         Label="Temperature"
+                                         Min="0" Max="1" Step="0.01"
+                                         Required="true" />
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <MudNumericField @bind-Value="_model.MaxTokens"
+                                         Label="Max Tokens"
+                                         Min="10" Max="2000" Step="10"
+                                         Required="true" />
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <MudNumericField @bind-Value="_model.TopP"
+                                         Label="Top P"
+                                         Min="0" Max="1" Step="0.01"
+                                         Required="true" />
+                    </MudItem>
+                </MudGrid>
+
+                <MudStack Direction="Row" JustifyContent="flex-end" Class="mt-6">
+                    <MudButton OnClick="ValidateAndSave"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary">
+                        Salva configurazione
+                    </MudButton>
+                </MudStack>
+            </MudForm>
+        </MudPaper>
+    </MudContainer>
+</div>
+
+@code {
+    private MudForm _form = default!;
+    private PromptSettings _model = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _model = await PromptSvc.GetAsync(TenantInfoOpt.Value.TenantName);
+    }
+
+    private async Task ValidateAndSave()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+            await SaveAsync();
+        else
+            HandleInvalid();
+    }
+
+    private void HandleInvalid()
+    {
+        Snackbar.Add("Form non valido", Severity.Warning);
+        Console.WriteLine($"VALID? {_form.IsValid}");
+        foreach (var message in _form.Errors)
+            Console.WriteLine(message);
+    }
+
+    private async Task SaveAsync()
+    {
+        _model.TenantId = TenantInfoOpt.Value.TenantName;
+        await PromptSvc.SaveAsync(_model);
+        Snackbar.Add("Configurazione salvata", Severity.Success);
+    }
+}
