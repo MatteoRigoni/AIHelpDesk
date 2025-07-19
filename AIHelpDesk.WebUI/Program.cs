@@ -1,8 +1,8 @@
 using AIHelpDesk.Application.AI;
 using AIHelpDesk.Infrastructure;
+using AIHelpDesk.Infrastructure.Data;
 using AIHelpDesk.Infrastructure.Model;
 using AIHelpDesk.WebUI.Components;
-using AIHelpDesk.WebUI.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -12,6 +12,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel;
 using MudBlazor.Services;
+using OpenAI.Chat;
 using System.Globalization;
 using System.Linq;
 
@@ -60,7 +61,20 @@ builder.Services.AddScoped<IEmbeddingService, OpenAiEmbeddingService>();
 builder.AddQdrantClient("qdrant");
 builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
 
+builder.Services.AddSingleton<ChatClient>(sp =>
+{
+    string apiKey = builder.Configuration["OpenAI:ApiKey"];    
+    string model = builder.Configuration.GetValue("OpenAI:Model", "gpt-4");
+
+    return new ChatClient(model: model, apiKey: apiKey);
+});
+
 builder.Services.AddScoped<DocumentIndexService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IChatLogService, ChatLogService>();
+
+builder.Services.Configure<TenantInfoOptions>(
+    builder.Configuration.GetSection("TenantInfo"));
 
 builder.AddServiceDefaults();
 

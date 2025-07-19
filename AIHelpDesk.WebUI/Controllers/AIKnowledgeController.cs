@@ -1,6 +1,8 @@
 ﻿using AIHelpDesk.Application.AI;
+using AIHelpDesk.Infrastructure.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
 [Authorize(Roles = "Admin")]
@@ -10,15 +12,18 @@ public class AIKnowledgeController : ControllerBase
 {
     private readonly IFileParserService _fileParserService;
     private readonly DocumentIndexService _docIndexService;
+    private readonly IOptions<TenantInfoOptions> _tenantOptions;
     private readonly IWebHostEnvironment _env;
 
     public AIKnowledgeController(
        IFileParserService fileParserService,
        DocumentIndexService docIndexService,
+       IOptions<TenantInfoOptions> tenantOptions,
        IWebHostEnvironment env)
     {
         _fileParserService = fileParserService;
         _docIndexService = docIndexService;
+        _tenantOptions = tenantOptions;
         _env = env;
     }
 
@@ -28,14 +33,8 @@ public class AIKnowledgeController : ControllerBase
         if (file == null || file.Length == 0)
             return BadRequest("File mancante.");
 
-        // Ottieni l’ID del tenant: adatta questo al tuo multi‐tenant setup
-        // Esempio: potresti avere un claim "tenant_id", oppure usare un subdominio, ecc.
-        var tenantId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                       ?? HttpContext.Request.Headers["X-Tenant-ID"].FirstOrDefault()
-                       ?? "default";
-
         // 1. Estrai e indicizza tutto in Qdrant via DocumentIndexService
-        await _docIndexService.IndexDocumentAsync(tenantId, file);
+        await _docIndexService.IndexDocumentAsync(_tenantOptions.Value.TenantName, file);
 
         // 2. (Opzionale) salva ancora il file di testo per audit/log
         var parsedDocsPath = Path.Combine(_env.ContentRootPath, "ParsedDocs");
@@ -48,7 +47,7 @@ public class AIKnowledgeController : ControllerBase
         return Ok(new
         {
             File = file.FileName,
-            Tenant = tenantId,
+            Tenant = _tenantOptions.Value.TenantName,
             Chunks = "indicate number of chunks if you want",
             IndexedAt = DateTime.UtcNow
         });

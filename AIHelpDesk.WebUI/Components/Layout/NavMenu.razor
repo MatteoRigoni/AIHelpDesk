@@ -14,6 +14,9 @@
                 <MudNavLink Href="/admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings">
                     Admin
                 </MudNavLink>
+                <MudNavLink Href="/chat" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Explore">
+                    Playground
+                </MudNavLink>
             }
             else if (context.User.IsInRole("HelpDeskAgent"))
             {

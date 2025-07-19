@@ -1,7 +1,13 @@
 @page "/"
+@using AIHelpDesk.Infrastructure.Model
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
 @using MudBlazor
+@using Qdrant.Client
 @inject NavigationManager Nav
+@inject Microsoft.Extensions.Options.IOptions<TenantInfoOptions> TenantInfoOpt
+@inject UserManager<IdentityUser> UserMgr
+@inject QdrantClient Qdrant
 
 <PageTitle>AI HelpDesk</PageTitle>
 
@@ -68,7 +74,7 @@
         <MudStack Direction="Row" Spacing="6" Class="instance-status mt-8 mud-text-secondary">
             <MudText Typo="Typo.caption">Azienda: @DisplayCompany</MudText>
             <MudText Typo="Typo.caption">Utenti: @DisplayUsers</MudText>
-            <MudText Typo="Typo.caption">Documenti indicizzati: @DisplayDocs</MudText>
+            <MudText Typo="Typo.caption">Testi indicizzati: @DisplayDocs</MudText>
             <MudText Typo="Typo.caption">Provider AI: @DisplayProvider</MudText>
         </MudStack>
 
@@ -84,14 +90,32 @@
 </div>
 
 @code {
-    [Parameter] public string? TenantName { get; set; }
-    [Parameter] public int? UserCount { get; set; }
-    [Parameter] public int? DocumentCount { get; set; }
-    [Parameter] public string? AiProvider { get; set; }
 
-    string DisplayTitle => TenantName is null ? "Benvenuto in AI HelpDesk" : $"Benvenuto in {TenantName}";
-    string DisplayCompany => TenantName ?? "Non configurato";
-    string DisplayUsers => UserCount.HasValue ? UserCount.Value.ToString() : "—";
-    string DisplayDocs => DocumentCount.HasValue ? DocumentCount.Value.ToString() : "—";
-    string DisplayProvider => string.IsNullOrWhiteSpace(AiProvider) ? "Non configurato" : AiProvider;
+    private TenantInfoOptions Info => TenantInfoOpt.Value;
+    int? userCount;
+    int? docCount;
+
+    string DisplayTitle => Info.TenantName is null
+                               ? "Benvenuto in AI HelpDesk"
+                               : $"Benvenuto in {Info.TenantName}";
+    string DisplayCompany => Info.TenantName ?? "Non configurato";
+    string DisplayUsers => userCount?.ToString() ?? "—";
+    string DisplayDocs => docCount?.ToString() ?? "—";
+    string DisplayProvider => string.IsNullOrWhiteSpace(Info.AiProvider)
+                                   ? "Non configurato"
+                                   : Info.AiProvider;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userCount = UserMgr.Users.Count();
+
+        var coll = $"tenant_{Info.TenantName}";
+        if (await Qdrant.CollectionExistsAsync(coll))
+        {
+            var info = await Qdrant.GetCollectionInfoAsync(coll);
+            docCount = (int)info.PointsCount;
+        }
+        else
+            docCount = 0; 
+    }
 }

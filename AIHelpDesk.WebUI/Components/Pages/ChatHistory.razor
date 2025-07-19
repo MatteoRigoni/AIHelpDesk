@@ -1,0 +1,47 @@
+﻿@page "/admin/chat/history"
+@page "/agent/chat/history"
+@using AIHelpDesk.Application.AI
+@using AIHelpDesk.Domain
+@using AIHelpDesk.Infrastructure.Model
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@attribute [Authorize(Roles = "Admin,HelpDeskAgent")]
+@inject IChatLogService LogService
+@inject AuthenticationStateProvider AuthState
+@inject Microsoft.Extensions.Options.IOptions<TenantInfoOptions> TenantInfoOpt
+
+<PageTitle>Storico Chat</PageTitle>
+
+<MudTable Items="_history" Hover="true" Dense="true">
+    <HeaderContent>
+        <MudTh>Data/Ora</MudTh><MudTh>Utente</MudTh><MudTh>Domanda</MudTh><MudTh>Risposta</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Data/Ora">@context.Timestamp</MudTd>
+        <MudTd DataLabel="Utente">@context.UserId</MudTd>
+        <MudTd DataLabel="Domanda">@context.UserMessage</MudTd>
+        <MudTd DataLabel="Risposta">@context.AIResponse</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private List<ChatLog> _history = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var auth = await AuthState.GetAuthenticationStateAsync();
+        var user = auth.User;
+        var tenantId = TenantInfoOpt.Value.TenantName;
+        string? userId = null;
+
+        if (user.IsInRole("HelpDeskAgent"))
+        {
+            // solo il proprio storico
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        _history = (await LogService.GetHistoryAsync(tenantId, userId, limit: 200))
+                   .ToList();
+    }
+}

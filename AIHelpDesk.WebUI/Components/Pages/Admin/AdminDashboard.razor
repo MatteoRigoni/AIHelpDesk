@@ -18,7 +18,7 @@
 
         <!-- Feature cards senza bordi netti -->
         <MudGrid GutterSize="3" Class="mt-8">
-            <MudItem xs="12" sm="6" md="4">
+            <MudItem xs="12" sm="6" md="3">
                 <MudPaper Elevation="0" Class="feature-card p-6 text-center">
                     <MudIcon Icon="@Icons.Material.Filled.UploadFile" Size="Size.Large" />
                     <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Upload Documenti</MudText>
@@ -29,7 +29,20 @@
                 </MudPaper>
             </MudItem>
 
-            <MudItem xs="12" sm="6" md="4">
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Elevation="0" Class="feature-card p-6 text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.History" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Storico richieste</MudText>
+                    <MudText Typo="Typo.body2" Class="mb-4">
+                        Rivedi conversazioni precedenti degli agenti
+                    </MudText>
+                    <MudButton Href="/admin/chat/history" Variant="Variant.Filled" Color="Color.Primary">
+                        Vai allo storico
+                    </MudButton>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="3">
                 <MudPaper Elevation="0" Class="feature-card p-6 text-center">
                     <MudIcon Icon="@Icons.Material.Filled.People" Size="Size.Large" />
                     <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Utenti e Permessi</MudText>
@@ -38,7 +51,7 @@
                 </MudPaper>
             </MudItem>
 
-            <MudItem xs="12" sm="6" md="4">
+            <MudItem xs="12" sm="6" md="3">
                 <MudPaper Elevation="0" Class="feature-card p-6 text-center">
                     <MudIcon Icon="@Icons.Material.Filled.Settings" Size="Size.Large" />
                     <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Impostazioni AI</MudText>

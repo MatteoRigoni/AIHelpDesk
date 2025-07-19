@@ -1,15 +1,20 @@
+using AIHelpDesk.Application;
+using AIHelpDesk.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AIHelpDesk.WebUI.Data;
+namespace AIHelpDesk.Infrastructure.Data;
 
 public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
+
     }
+
+    public DbSet<ChatLog> ChatLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -1,0 +1,100 @@
+﻿@page "/chat"
+@using AIHelpDesk.Application.AI
+@using AIHelpDesk.Infrastructure.Model
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize(Roles = "HelpDeskAgent")]
+@inject IChatService ChatService
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthState
+@inject Microsoft.Extensions.Options.IOptions<TenantInfoOptions> TenantInfoOpt
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-12">
+    <MudPaper Elevation="1" Class="pa-6">
+
+        <!-- Titolo -->
+        <MudText Typo="Typo.h6" Class="mb-2 d-flex align-center gap-2">
+            <MudIcon Icon="@Icons.Material.Filled.ChatBubbleOutline" />
+            Chat Assistente AI
+        </MudText>
+
+        <!-- LISTA MESSAGGI -->
+        <MudDivider Class="mb-3" />
+        <MudList Dense="true" T="ChatMessage" Class="chat-list mb-3">
+            @foreach (var msg in _messages)
+            {
+                <MudListItem Value="@msg" Class="px-0">
+                    <MudText Typo="Typo.body2"
+                             Color="@(msg.Role == "assistant" ? Color.Primary : Color.Secondary)">
+                        <strong>@msg.Role</strong>: @msg.Content
+                    </MudText>
+                </MudListItem>
+            }
+        </MudList>
+
+        <!-- INPUT + BOTTONE -->
+        <MudGrid Class="w-100" GutterSize="2">
+            <MudItem xs="10">
+                @* 10/12 della riga = ~83 % *@
+                <MudTextField @bind-Value="_userInput"
+                              FullWidth="true"
+                              Variant="Variant.Outlined"
+                              Label="Scrivi la tua domanda"
+                              OnKeyDown="@(async (KeyboardEventArgs e) =>
+                                                          {
+                                                              if (e.Key == "Enter") await SendAsync();
+                                                          })" />
+            </MudItem>
+
+                                        <MudItem xs="2"
+                                                 Class="d-flex justify-end align-center">
+                                            @* bottone allineato a dx *@
+                                            <MudButton OnClick="SendAsync"
+                                                       Disabled="_loading"
+                                                       Variant="Variant.Filled"
+                                                       Color="Color.Primary"
+                                                       StartIcon="@Icons.Material.Filled.Send">
+                                                @(_loading ? "Invio…" : "Invia")
+                                            </MudButton>
+                                        </MudItem>
+                                    </MudGrid>
+
+                                    </MudPaper>
+                                </MudContainer>
+
+@code {
+    private readonly List<ChatMessage> _messages = [];
+    private string _userInput = "";
+    private bool _loading = false;
+    string? userId = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var auth = await AuthState.GetAuthenticationStateAsync();
+        var user = auth.User;;
+
+        if (user.IsInRole("HelpDeskAgent"))
+        {
+            // solo il proprio storico
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+
+    private async Task SendAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_userInput)) return;
+        _loading = true;
+        try
+        {
+            var reply = await ChatService.AskAsync(TenantInfoOpt.Value.TenantName, _userInput, userId);
+            _messages.AddRange(reply);
+            _userInput = "";
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Errore: " + ex.Message, Severity.Error);
+        }
+        finally { _loading = false; }
+    }
+}

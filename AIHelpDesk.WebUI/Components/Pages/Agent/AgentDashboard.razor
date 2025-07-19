@@ -1,0 +1,66 @@
+@page "/agent"
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@attribute [Authorize(Roles = "Agent")]
+
+<PageTitle>AI HelpDesk – Area Agente</PageTitle>
+
+<div class="aih-agent-root">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="aih-agent-main py-10">
+
+        <!-- Hero -->
+        <MudPaper Elevation="0" Class="p-8 text-center agent-hero-paper mb-6">
+            <MudText Typo="Typo.h2" Class="mb-1 font-weight-bold">Area Agente</MudText>
+            <MudText Typo="Typo.body1" Class="mt-2 mud-text-secondary">
+                Accedi alla chat con l’AI e consulta rapidamente la knowledge base.
+            </MudText>
+        </MudPaper>
+
+        <!-- Feature cards -->
+        <MudGrid GutterSize="3" Class="mt-8">
+            <!-- Chat -->
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="0" Class="feature-card p-6 text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.Chat" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Chat Assistente</MudText>
+                    <MudText Typo="Typo.body2" Class="mb-4">
+                        Interagisci con l’AI sui documenti indicizzati
+                    </MudText>
+                    <MudButton Href="/agent/chat" Variant="Variant.Filled" Color="Color.Primary">
+                        Apri chat
+                    </MudButton>
+                </MudPaper>
+            </MudItem>
+
+            <!-- Storico -->
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="0" Class="feature-card p-6 text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.History" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Storico richieste</MudText>
+                    <MudText Typo="Typo.body2" Class="mb-4">
+                        Rivedi conversazioni precedenti degli agenti
+                    </MudText>
+                    <MudButton Href="/chat/history" Variant="Variant.Filled" Color="Color.Primary">
+                        Vai allo storico
+                    </MudButton>
+                </MudPaper>
+            </MudItem>
+
+            <!-- Statistiche (placeholder) -->
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="0" Class="feature-card p-6 text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.Insights" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2 font-weight-medium">Statistiche</MudText>
+                    <MudText Typo="Typo.body2" Class="mb-4">
+                        Monitora le prestazioni dell’assistente
+                    </MudText>
+                    <MudButton Disabled="true" Variant="Variant.Outlined">Coming soon</MudButton>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</div>
+
+@code {
+    // Logica specifica agente (se necessaria)
+}
