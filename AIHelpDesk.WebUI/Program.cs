@@ -60,6 +60,8 @@ builder.Services.AddScoped<IEmbeddingService, OpenAiEmbeddingService>();
 builder.AddQdrantClient("qdrant");
 builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
 
+builder.Services.AddScoped<DocumentIndexService>();
+
 builder.AddServiceDefaults();
 
 var app = builder.Build();

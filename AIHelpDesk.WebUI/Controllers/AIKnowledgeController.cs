@@ -1,6 +1,7 @@
 ﻿using AIHelpDesk.Application.AI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 [Authorize(Roles = "Admin")]
 [ApiController]
@@ -29,7 +30,7 @@ public class AIKnowledgeController : ControllerBase
 
         // Ottieni l’ID del tenant: adatta questo al tuo multi‐tenant setup
         // Esempio: potresti avere un claim "tenant_id", oppure usare un subdominio, ecc.
-        var tenantId = User.FindFirst("tenant_id")?.Value
+        var tenantId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                        ?? HttpContext.Request.Headers["X-Tenant-ID"].FirstOrDefault()
                        ?? "default";
 

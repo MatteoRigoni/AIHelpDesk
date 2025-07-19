@@ -14,8 +14,7 @@ public sealed class QdrantVectorStoreService : IVectorStoreService
 {
     private readonly QdrantClient _client;
 
-    public QdrantVectorStoreService(
-        [FromKeyedServices("mainQdrant")] QdrantClient client) =>
+    public QdrantVectorStoreService(QdrantClient client) =>
         _client = client;
 
     private static string Collection(string tenant) => $"tenant_{tenant}";
@@ -25,7 +24,7 @@ public sealed class QdrantVectorStoreService : IVectorStoreService
     // ------------------------------------------------------------
     public async Task StoreAsync(
         string tenant,
-        IEnumerable<(string id, float[] vector, string text)> items)
+        IEnumerable<(string id, string filename, float[] vector, string text)> items)
     {
         var name = Collection(tenant);
         var first = items.First();
@@ -48,7 +47,8 @@ public sealed class QdrantVectorStoreService : IVectorStoreService
             Id = new PointId { Uuid = i.id },
             Vectors = i.vector,
             Payload = {
-                ["text"] = i.text
+                ["text"] = i.text,
+                ["filename"] = i.filename
         }
         });
 

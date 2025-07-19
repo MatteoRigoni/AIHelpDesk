@@ -5,7 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var qdrant = builder.AddQdrant("qdrant")                        // nome logico "qdrant"
+var qdrantApiKey = builder.AddParameter("qdrantApiKey", secret: true);
+var qdrant = builder.AddQdrant("qdrant", qdrantApiKey)          // nome logico "qdrant"
                     .WithLifetime(ContainerLifetime.Persistent) // evita restart lenti
                     .WithDataVolume();                          // persistenza locale
 
