@@ -1,0 +1,69 @@
+﻿@* EditRolesDialog.razor *@
+@using AIHelpDesk.Application
+@using AIHelpDesk.Application.AI
+@inject IUserManagementService UserService
+
+<MudDialog>
+    <DialogContent>
+        <!-- Wrappiamo titolo e lista in uno stack con spacing -->
+        <MudStack Direction="Column" Spacing="1">
+
+            @foreach (var role in _allRoles)
+            {
+                <MudCheckBox T="bool"
+                             Label="@role"
+                             Checked="@_selectedRoles.Contains(role)"
+                             CheckedChanged="@( (bool isChecked) => ToggleRole(role, isChecked) )" />
+            }
+
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Annulla</MudButton>
+        <MudButton OnClick="SaveAsync" Variant="Variant.Filled" Color="Color.Primary">Salva</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public UserDto User { get; set; } = default!;
+
+    private readonly string[] _allRoles =
+    {
+        Roles.Admin,
+        Roles.HelpDeskAgent
+    };
+
+    private HashSet<string> _selectedRoles = new();
+
+    protected override void OnInitialized()
+    {
+        _selectedRoles = User.Roles.ToHashSet();
+    }
+
+    private void ToggleRole(string role, bool isChecked)
+    {
+        if (isChecked)
+            _selectedRoles.Add(role);
+        else
+            _selectedRoles.Remove(role);
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task SaveAsync()
+    {
+        var currentRoles = new HashSet<string>(await UserService.GetUsersAsync()
+            .ContinueWith(t => t.Result.First(u => u.Id == User.Id).Roles));
+
+        // aggiungo i nuovi
+        foreach (var role in _selectedRoles.Except(currentRoles))
+            await UserService.AssignRoleAsync(User.Id, role);
+
+        // rimuovo i deselezionati
+        foreach (var role in currentRoles.Except(_selectedRoles))
+            await UserService.RemoveRoleAsync(User.Id, role);
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

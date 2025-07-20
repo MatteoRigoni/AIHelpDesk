@@ -1,42 +1,40 @@
 ﻿@page "/admin/upload"
+@using AIHelpDesk.Application
+@using AIHelpDesk.Application.AI
+@using AIHelpDesk.Domain              @* o il namespace dove sta UploadedDocument *@
+@using AIHelpDesk.Infrastructure.Model
 @using Microsoft.AspNetCore.Authorization
-@using MudBlazor
 @attribute [Authorize(Roles = "Admin")]
+@inject Microsoft.Extensions.Options.IOptions<TenantInfoOptions> TenantInfoOpt
+
+@inject IDocumentService DocumentSvc
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 
 <div class="aih-admin-root">
     <MudContainer MaxWidth="MaxWidth.Large" Class="aih-admin-main py-10">
 
-        @* Global progress bar shown only while uploading *@
+        @* — UPLOAD SECTION — *@
         @if (_isUploading)
         {
-            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-6" />
+            <MudProgressLinear Indeterminate="true"
+                               Color="Color.Primary"
+                               Class="mb-6" />
         }
 
-        <!-- Hero amministrativo -->
         <MudPaper Elevation="0" Class="p-8 text-center admin-hero-paper mb-6">
-            <MudText Typo="Typo.h2" Class="mb-1 font-weight-bold">Upload Documenti AI</MudText>
-            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary">
-                Carica file per arricchire la base conoscitiva dell'assistente interno.
-            </MudText>
-        </MudPaper>
-
-        <!-- Form di upload styled -->
-        <MudPaper Elevation="0" Class="feature-card p-8 text-center">
-            <MudText Typo="Typo.caption" Class="mb-4 mud-text-secondary">
-                Formati supportati: PDF, TXT, CSV (max 5 MB)
+            <MudText Typo="Typo.h5" Class="mb-1">Upload Documenti AI</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-4">
+                Carica PDF, TXT o CSV (max 5 MB) per indicizzare
             </MudText>
 
-            <MudFileUpload 
-                T="IBrowserFile" 
-                Context="fileInput" 
-                Accept="application/pdf,text/plain,text/csv" 
-                MaxFileSize="5242880" 
-                FilesChanged="OnFileChanged">
+            <MudFileUpload T="IBrowserFile"
+                           Context="fileInput"
+                           Accept="application/pdf,text/plain,text/csv"
+                           MaxFileSize="5242880"
+                           FilesChanged="OnFileChanged">
                 <ActivatorContent>
-                    <MudButton Class="mt-4"
-                               Variant="Variant.Filled"
+                    <MudButton Variant="Variant.Filled"
                                Color="Color.Primary"
                                Disabled="_isUploading"
                                StartIcon="@Icons.Material.Filled.CloudUpload">
@@ -46,16 +44,60 @@
             </MudFileUpload>
         </MudPaper>
 
-        <!-- Feedback Snackbar positioned -->
-        <MudSnackbarContainer />
+        @* — LIST SECTION — *@
+        <MudPaper Class="pa-4 mx-auto" MaxWidth="800px">
+            <MudText Typo="Typo.h5" Class="mb-4">Documenti Caricati</MudText>
+            <MudTable Items="_docs" Hover="true" Dense="true">
+                <HeaderContent>
+                    <MudTh>File</MudTh>
+                    <MudTh>Data</MudTh>
+                    <MudTh>Chunks</MudTh>
+                    <MudTh>Stato</MudTh>
+                    <MudTh>Azioni</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="File">@context.FileName</MudTd>
+                    <MudTd DataLabel="Data">@context.UploadedAt</MudTd>
+                    <MudTd DataLabel="Chunks">@context.ChunkCount</MudTd>
+                    <MudTd DataLabel="Stato">@context.Status</MudTd>
+                    <MudTd DataLabel="Azioni">
+                        <MudButton Size="Size.Small"
+                                   Variant="Variant.Outlined"
+                                   OnClick="()=>Reindex(context.Id)">
+                            Re‑Index
+                        </MudButton>
+                        <MudButton Size="Size.Small"
+                                   Color="Color.Error"
+                                   Variant="Variant.Outlined"
+                                   OnClick="()=>Delete(context.Id)">
+                            Elimina
+                        </MudButton>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
 
     </MudContainer>
 </div>
 
 @code {
     private IBrowserFile fileInput = default!;
-    private bool _isUploading = false;
+    private bool _isUploading;
+    private List<UploadedDocument> _docs = new();
+    private CancellationTokenSource? _pollingCts;
+
     private string _buttonLabel => _isUploading ? "Caricamento..." : "Seleziona documento";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDocsAsync();
+    }
+
+    private async Task LoadDocsAsync()
+    {
+        _docs = (await DocumentSvc.ListAsync(TenantInfoOpt.Value.TenantName)).ToList();
+        StateHasChanged();
+    }
 
     private async Task OnFileChanged(IBrowserFile file)
     {
@@ -68,15 +110,17 @@
             await using var stream = file.OpenReadStream(5 * 1024 * 1024);
             content.Add(new StreamContent(stream), "file", file.Name);
 
-            var res = await Http.PostAsync("upload/ai-docs", content);
+            var res = await Http.PostAsync("/upload/ai-docs", content);
 
             if (res.IsSuccessStatusCode)
             {
-                Snackbar.Add($"File {file.Name} caricato con successo.", Severity.Success);
+                Snackbar.Add($"File {file.Name} caricato.", Severity.Success);
+                await LoadDocsAsync();
+                StartPollingIfPending();
             }
             else
             {
-                Snackbar.Add($"Errore nel caricamento di {file.Name}.", Severity.Error);
+                Snackbar.Add($"Errore upload: {res.ReasonPhrase}", Severity.Error);
             }
         }
         catch (Exception ex)
@@ -87,6 +131,60 @@
         {
             _isUploading = false;
             StateHasChanged();
+        }
+    }
+
+    private async Task Reindex(int id)
+    {
+        await DocumentSvc.ReindexAsync(id);
+        Snackbar.Add("Re‑index avviato", Severity.Info);
+        await LoadDocsAsync();  
+        StartPollingIfPending();
+    }
+
+    private async Task Delete(int id)
+    {
+        await DocumentSvc.DeleteAsync(id);
+        Snackbar.Add("Documento eliminato", Severity.Success);
+        await LoadDocsAsync();
+        // Stop polling if no more pending
+        if (!HasPending())
+            StopPolling();
+    }
+
+    private bool HasPending() => _docs.Any(d => d.Status == "Pending");
+
+    private void StartPollingIfPending()
+    {
+        if (HasPending())
+        {
+            StopPolling(); // ensure only one polling
+            _pollingCts = new CancellationTokenSource();
+            _ = PollPendingAsync(_pollingCts.Token);
+        }
+    }
+
+    private void StopPolling()
+    {
+        _pollingCts?.Cancel();
+        _pollingCts = null;
+    }
+
+    private async Task PollPendingAsync(CancellationToken token)
+    {
+        try
+        {
+            while (!token.IsCancellationRequested && HasPending())
+            {
+                await Task.Delay(3000, token); 
+                await LoadDocsAsync();
+            }
+        }
+        catch (TaskCanceledException) { }
+        finally
+        {
+            if (!HasPending())
+                StopPolling();
         }
     }
 }

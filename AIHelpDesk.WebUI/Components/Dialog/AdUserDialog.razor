@@ -1,0 +1,59 @@
+﻿@* AddUserDialog.razor *@
+@using AIHelpDesk.Application
+@using AIHelpDesk.Application.AI
+@using AIHelpDesk.Infrastructure.Model
+@inject IUserManagementService UserService
+@inject Microsoft.Extensions.Options.IOptions<TenantInfoOptions> TenantInfoOpt
+
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form" OnValidSubmit="CreateAsync" Class="mb-5">
+            <!-- Wrappiamo i campi in uno Stack con spacing 3 (puoi aumentarlo o diminuirlo) -->
+            <MudStack Spacing="3">
+                <MudTextField @bind-Value="_email"
+                              Label="Email"
+                              Required="true"
+                              FullWidth="true" />
+
+                <MudTextField @bind-Value="_password"
+                              Label="Password"
+                              InputType="InputType.Password"
+                              Required="true"
+                              FullWidth="true" />
+
+                <MudSelect T="string"
+                           @bind-Value="_selectedRole"
+                           Label="Ruolo"
+                           Required="true"
+                           FullWidth="true">
+                    <MudSelectItem T="string" Value="Roles.Admin">Admin</MudSelectItem>
+                    <MudSelectItem T="string" Value="Roles.HelpDeskAgent">HelpDeskAgent</MudSelectItem>
+                </MudSelect>
+            </MudStack>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Annulla</MudButton>
+        <MudButton OnClick="CreateAsync" Variant="Variant.Filled" Color="Color.Primary">Crea</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+
+    private MudForm _form = default!;
+    private string _email = "";
+    private string _password = "";
+    private string _selectedRole = Roles.HelpDeskAgent;
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task CreateAsync()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        await UserService.CreateUserAsync(_email, _password, _selectedRole);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

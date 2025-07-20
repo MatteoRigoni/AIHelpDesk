@@ -17,8 +17,8 @@ namespace AIHelpDesk.Application.AI
             string tenantId,
             string userQuestion,
             string userId,
-            double? temperature = 0,
-            double? topP = 1,
-            int? maxTokens = 1024);
+            double? temperature = null,
+            double? topP = null,
+            int? maxTokens = null);
     }
 }

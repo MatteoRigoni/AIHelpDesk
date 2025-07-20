@@ -1,0 +1,95 @@
+﻿@page "/admin/users"
+@using AIHelpDesk.Application
+@using AIHelpDesk.WebUI.Components.Dialog
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@inject IUserManagementService UserService
+@inject IDialogService         DialogService
+@inject ISnackbar              Snackbar
+
+<MudPaper Class="pa-4 mx-auto" MaxWidth="800px">
+    <MudText Typo="Typo.h5" Class="mb-4">Gestione Utenti</MudText>
+
+    <MudButton OnClick="OpenAddUserDialog"
+               Variant="Variant.Filled"
+               Color="Color.Primary"
+               StartIcon="@Icons.Material.Filled.PersonAdd"
+               Class="mb-4">
+        Nuovo Utente
+    </MudButton>
+
+    <MudTable Items="_users" Hover="true" Dense="true">
+        <HeaderContent>
+            <MudTh>Email</MudTh>
+            <MudTh>Ruoli</MudTh>
+            <MudTh>Azioni</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd DataLabel="Ruoli">@string.Join(", ", context.Roles)</MudTd>
+            <MudTd DataLabel="Azioni">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                               Color="Color.Info"
+                               OnClick="@(()=>OpenEditRolesDialog(context))"
+                               Title="Modifica ruoli" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Error"
+                               OnClick="@(()=>ConfirmDelete(context))"
+                               Title="Elimina utente" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudPaper>
+
+@code {
+    private List<UserDto> _users = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsersAsync();
+    }
+
+    private async Task LoadUsersAsync()
+    {
+        _users = (await UserService.GetUsersAsync()).ToList();
+    }
+
+    private async Task OpenAddUserDialog()
+    {
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small };
+        var dialog = DialogService.Show<AdUserDialog>("Nuovo Utente", options);
+        var result = await dialog.Result;
+    if (!result.Canceled)
+    {
+        await LoadUsersAsync();
+        Snackbar.Add("Utente creato con successo", Severity.Success);
+    }
+}
+
+private async Task OpenEditRolesDialog(UserDto user)
+{
+    var parameters = new DialogParameters { ["User"] = user };
+    var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium };
+    var dialog = DialogService.Show<EditRolesDialog>($"Ruoli", parameters, options);
+    var result = await dialog.Result;
+        if (!result.Canceled)
+    {
+        await LoadUsersAsync();
+        Snackbar.Add("Ruoli aggiornati", Severity.Success);
+    }
+}
+
+private async Task ConfirmDelete(UserDto user)
+{
+    bool? ok = await DialogService.ShowMessageBox(
+        "Conferma",
+        $"Eliminare l'utente {user.Email}?",
+        yesText: "Sì", noText: "No");
+    if (ok == true)
+    {
+        await UserService.DeleteUserAsync(user.Id);
+        await LoadUsersAsync();
+        Snackbar.Add("Utente eliminato", Severity.Success);
+    }
+}
+}

@@ -1,21 +1,22 @@
-# AIHelpDesk
+# AI HelpDesk
 
-This project is an ASP.NET Core application using MudBlazor and Identity. 
+**Self‑hosted AI HelpDesk assistant** for enterprise teams — single‑tenant, white‑label, customizable, built on .NET 8 & Blazor Server.
 
-## Observability
+---
 
-Telemetry and logging are configured through a .NET Aspire AppHost. The OTLP endpoint is controlled via the `OpenTelemetry:OtlpEndpoint` setting found in the host `appsettings.json`.
+[![Build Status](https://img.shields.io/github/actions/workflow/status/your-org/AIHelpDesk/build.yml?branch=main)](https://github.com/your‑org/AIHelpDesk/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/your-org/AIHelpDesk?style=social)](https://github.com/your‑org/AIHelpDesk/stargazers)
 
-Tracing and logging use OpenTelemetry and are centralized in the Aspire host so the WebUI project remains minimal.
+> A modern, on‑premise AI assistant you can install and brand for each customer. Fast to deploy on Docker or Azure App Service, with Qdrant vector search and GPT‑4 powered RAG.
 
-## Building
+## 🔍 Features
 
-```
-dotnet build
-```
-
-## Running
-
-```
-dotnet run --project AIHelpDesk.AppHost
-```
+- **Single‑tenant**: one instance per customer, on Azure, AWS or on‑premise  
+- **Clean Architecture**: Domain / Application / Infrastructure / WebUI  
+- **Auth & Roles**: Identity with Admin & HelpDeskAgent roles  
+- **Document RAG**: upload PDF/TXT/CSV → parse → chunk → embeddings → Qdrant k‑NN → GPT‑4  
+- **Admin Panel**: branding, prompt & parameter customization, user management, document dashboard  
+- **Chat UI**: MudBlazor chat interface with history & export  
+- **Logging & History**: persistent chat logs with filtering by role  
+- **Easy Deploy**: Dockerfile + `docker-compose.yml` + Azure App Service-ready scripts  
