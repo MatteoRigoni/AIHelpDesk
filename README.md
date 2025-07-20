@@ -4,7 +4,7 @@
 
 ---
 
-[![CI](https://github.com/MatteoRigoni/AIHelpDesk/actions/workflows/ci.yml/badge.svg)](https://github.com/MatteoRigoni/AIHelpDesk/actions/workflows/ci.yml)
+[![CI](https://github.com/MatteoRigoni/AIHelpDesk/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/MatteoRigoni/AIHelpDesk/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/MatteoRigoni/AIHelpDesk?style=social)](https://github.com/MatteoRigoni/AIHelpDesk/stargazers)
 
