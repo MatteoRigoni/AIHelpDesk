@@ -4,9 +4,9 @@
 
 ---
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/your-org/AIHelpDesk/build.yml?branch=main)](https://github.com/your‑org/AIHelpDesk/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/MatteoRigoni/AIHelpDesk/build.yml?branch=main)](https://github.com/MatteoRigoni/AIHelpDesk/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/your-org/AIHelpDesk?style=social)](https://github.com/your‑org/AIHelpDesk/stargazers)
+[![Stars](https://img.shields.io/github/stars/MatteoRigoni/AIHelpDesk?style=social)](https://github.com/MatteoRigoni/AIHelpDesk/stargazers)
 
 > A modern, on‑premise AI assistant you can install and brand for each customer. Fast to deploy on Docker or Azure App Service, with Qdrant vector search and GPT‑4 powered RAG.
 
